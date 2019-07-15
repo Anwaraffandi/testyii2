@@ -2,23 +2,24 @@
 
 namespace app\models;
 
-use yii\db\ActiveRecord;
+use yii\base\Model;
 
-class Post extends ActiveRecord
+class PostForm extends Model
 {
-    public static function tableName()
+    public $title;
+    public $content;
+
+    public function attributeLabels()
     {
-        return 'post';
+        return [
+            'title' => 'Title',
+            'content' => 'Content'];
     }
+
     public function rules()
     {
         return [
             ['title', 'required','message' => 'gak boleh kosong'],
             ['content', 'required','message' => 'gak boleh kosong'],];
     }
-    public function getKomen(){
-        return $this->hasMany(Komen::className(), ['idpost' => 'idpost']);
-    }
-
-    
 }

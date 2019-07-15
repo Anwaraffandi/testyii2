@@ -2,103 +2,79 @@
 
 namespace app\models;
 
+use app\models\TblUsers;
+
 class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
 {
-    public $id;
+    //public $id;
+    //public $username;
+    //public $password;
+    //public $authKey;
+    //public $accessToken;
     public $username;
     public $password;
-    public $authKey;
-    public $accessToken;
+    public $name;
+    public $role;
 
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function findIdentity($id)
-    {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+     
+    public static function findIdentity($name){
+     $users = TblUsers::find()->where(['name'=> $name])->one();
+        if ($users) {
+            return new static($users);
+        }
+        return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
 
+    }
+
+    public static function findByUsername($username){
+        $users = TblUsers::find()->where(['username'=> $username])->one();
+        if ($users) {
+            return new static($users);
+        }
         return null;
     }
 
-    /**
-     * Finds user by username
-     *
-     * @param string $username
-     * @return static|null
-     */
-    public static function findByUsername($username)
-    {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
 
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
+     
     public function getId()
     {
-        return $this->id;
+        return $this->name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getAuthKey()
-    {
-        return $this->authKey;
+    { 
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function validateAuthKey($authKey)
-    {
-        return $this->authKey === $authKey;
+    public function validateAuthKey($authkey)
+    { 
     }
 
-    /**
-     * Validates password
-     *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
-     */
     public function validatePassword($password)
     {
-        return $this->password === $password;
+        return $this->password === md5($password);
     }
+
+    /*class LevelLookUp{
+//const author = 2;
+//const admin = 1;
+// For CGridView, CListView Purposes
+public static function getLabel($username){
+if($username == self::author)
+return ‘Member’;
+if($username == self::admin)
+return ‘Administrator’;
+return false;
+}
+// for dropdown lists purposes
+public static function getLevelList(){
+return array(
+self::author=>’author’,
+self::admin=>’admin’);
+}
+}*/
+
 }

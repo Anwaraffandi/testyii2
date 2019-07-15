@@ -1,53 +1,90 @@
 <?php
 
-/* @var $this yii\web\View */
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use yii\widgets\Breadcrumbs;
+use yii\helpers\Url;
 
-$this->title = 'My Yii Application';
+$this->title = "CRUD";
+
 ?>
-<div class="site-index">
 
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
-
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
-        </div>
-
+<div class="row">
+    <div class="col-md-12">
+        <?php
+        //echo Breadcrumbs::widget(['itemTemplate' => "<li>{link}</li>\n"]);
+        ?>
     </div>
 </div>
+
+<div>   
+    <div class="col-md-12">
+    <table>
+        <tbody>
+                <?php 
+                $no =1;
+                if (count($post) > 0) { ?>
+                    <?php foreach ($post as $post): ?>
+                    <tr>    
+                        <td><h1><?= Html::encode("{$post['title']}") ?></h1></td>
+                    </tr>
+                    <tr>
+                        <td><h5><?= Html::encode("{$post['username']}") ?> <?= Html::encode("{$post['date']}") ?></h5></td>
+                    </tr>
+                    <tr>
+                        <td><?= $post->content ?></td>
+                    </tr>
+                    <tr>
+                   <?php if(is_array($post->komen)&&count($post->komen) > 0){ ?> 
+                    
+                    <?php foreach($post->komen as $key => $value) {
+                       ?>
+                       <tr>
+                        <td>
+                           <?= $value->username ?>
+                           :
+                          <?= $value->isikomen ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+ } ?>
+                    <?php 
+        //Komentar
+        $form = ActiveForm::begin([
+                'id' => 'post-form',
+                'options' => ['class' => 'form-horizontal'],
+                'action' => ['site/komen']
+                ])
+         
+         
+                ?>
+                <div>
+                    <?= $form->field($model, 'idpost')->hiddenInput(['value'=> $post->idpost])->label(false); ?>
+                </div>
+        <td>
+            <div class="form-group">
+                    <?= $form->field($model, 'isikomen')->textarea(); ?>
+            </div>
+        </td>
+        </tr>
+        <tr>
+        <td align="right">
+            <?= Html::submitButton('Simpan', ['class' => 'btn btn-primary']) ?>
+        </td>
+        </tr>
+        <?php ActiveForm::end(); 
+
+          endforeach; ?>
+                <?php } else { ?>
+
+                    <p style="text-align:center;font-size:15px;padding:25px;" colspan="5">No data found...</p>
+
+                <?php 
+               
+            } ?>
+            </tbody>
+          </table>
+    </div>
+</div>
+

@@ -9,12 +9,14 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use yii\helpers\Url;
 
-class SiteController extends Controller
-{
-    /**
-     * {@inheritdoc}
-     */
+use app\models\Post;
+use app\models\Akun;
+use app\models\Komen;
+
+class SiteController extends Controller{
+
     public function behaviors()
     {
         return [
@@ -38,11 +40,8 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function actions()
-    {
+    public function actions(){
+
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
@@ -54,23 +53,29 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        return $this->render('index');
+    public function actionIndex(){
+    $komen = new Komen();
+    $query = Post::find();
+    $post = $query->orderBy('idpost')->all();
+    //$querykomen = Komen::find();
+    //$tampilkomen = $querykomen->orderBy('idkomen')->all();
+    //echo "<pre>";print_r($post);die();
+        return $this->render('index', ['post'=>$post, 'model'=>$komen]);
     }
 
-    /**
-     * Login action.
-     *
-     * @return Response|string
-     */
-    public function actionLogin()
-    {
+    public function actionKomen(){
+        $komen = new Komen();
+        if($komen->load(Yii::$app->request->post())){
+            $komen->idkomen = NULL;
+            $komen->username = Yii::$app->user->identity->username;
+            $komen->save();
+           // echo "<pre>";print_r($komen);die();
+            return $this->redirect(Url::to(['site/index']));
+        }
+    }
+
+    public function actionLogin(){
+
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -86,43 +91,13 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
-    {
+
+    public function actionLogout(){
+
         Yii::$app->user->logout();
 
         return $this->goHome();
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
 
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
 }

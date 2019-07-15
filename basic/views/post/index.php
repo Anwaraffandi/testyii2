@@ -10,18 +10,20 @@ $this->title = "CRUD";
 
 <div class="row">
     <div class="col-md-12">
-        <h1>Akun List</h1>
-        <hr/>
+        
         <?php
 
         echo Breadcrumbs::widget([
             'itemTemplate' => "<li>{link}</li>\n", // template for all links
             'links' => [
-                'Akun List',
+                'Post',
             ],
         ]);
 
         ?>
+        <hr/>
+        <h1>Post</h1>
+        <a href="<?php echo Url::to(['post/add']); ?>"><button><i class="glyphicon glyphicon-plus"></i>Tambah</button></a>
     </div>
 </div>
 
@@ -30,29 +32,41 @@ $this->title = "CRUD";
         <table class="table table-striped">
             <thead>
               <tr>
-                <th>NO</th>
+                <th>#</th>
+                <th>Judul</th>
+                <th>ISI</th>
+                <th>Date</th>
                 <th>Username</th>
-                <th>Name</th>
-                <th>Role</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-                <?php if (count($teams) > 0) { ?>
-                    <?php foreach ($teams as $team): ?>
+                <?php 
+                $no =1;
+                if (count($post) > 0) { ?>
+                    <?php foreach ($post as $post): ?>
                         <tr>
-                            <td><?= Html::encode("{$team['name']}") ?></td>
-                            <td><?= Html::encode("{$team->league['name']}") ?></td>
-                            <td><?= Html::encode("{$team['country']}") ?></td>
+                            <td><?= $no ?></td>
+                            <td><?= Html::encode("{$post['title']}") ?></td>
+                            <td><?=("{$post['content']}") ?></td>
+                            <td><?= Html::encode("{$post['date']}") ?></td>
+                            <td><?= Html::encode("{$post['username']}") ?></td>
                             <td style="width:15%;text-align:center;">
-                                <a class="btn btn-success btn-sm" href="<?php echo Url::to(['hello-crud/detail', 'id'=>$team['id']]); ?>"><i class="glyphicon glyphicon-eye-open"></i></a> 
+                                <a href="<?php echo Url::to(['post/delete', 'id'=>$post['idpost']]); ?>"><i class="glyphicon glyphicon-trash"></i></a>
+                                <a href="<?php echo Url::to(['post/detail', 'id'=>$post['idpost']]); ?>"><i class="glyphicon glyphicon-eye-open"></i></a>
+                                <a href="<?php echo Url::to(['post/edit', 'id'=>$post['idpost']]); ?>"><i class="glyphicon glyphicon-pencil"></i></a> 
                             </td>
                           </tr>
-                    <?php endforeach; ?>
+                    <?php 
+                     $no++;
+                endforeach; ?>
                 <?php } else { ?>
                 <tr>
                     <td style="text-align:center;font-size:15px;padding:25px;" colspan="5">No data found...</td>
                 </tr>
-                <?php } ?>
+                <?php 
+                $no++;
+            } ?>
 
             </tbody>
           </table>

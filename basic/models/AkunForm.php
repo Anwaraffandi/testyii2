@@ -2,14 +2,25 @@
 
 namespace app\models;
 
-use yii\db\ActiveRecord;
+use yii\base\Model;
 
-class Akun extends ActiveRecord
+class AkunForm extends Model
 {
-    public static function tableName()
+    public $username;
+    public $name;
+    public $password;
+    public $role;
+
+    public function attributeLabels()
     {
-        return 'account';
+        return [
+            'username' => 'Username',
+            'name' => 'Name',
+            'password' => 'Password',
+            'role' => 'Role'
+        ];
     }
+
     public function rules()
     {
         return [

@@ -10,8 +10,6 @@ $this->title = "CRUD";
 
 <div class="row">
     <div class="col-md-12">
-        <h1>Akun List</h1>
-        <hr/>
         <?php
 
         echo Breadcrumbs::widget([
@@ -22,6 +20,9 @@ $this->title = "CRUD";
         ]);
 
         ?>
+        <hr/>
+        <h1>Akun</h1>
+        <a href="<?php echo Url::to(['akun/add']); ?>"><button><i class="glyphicon glyphicon-plus"></i>Tambah</button></a>
     </div>
 </div>
 
@@ -30,25 +31,35 @@ $this->title = "CRUD";
         <table class="table table-striped">
             <thead>
               <tr>
-                <th>NO</th>
+                <th>#</th>
                 <th>Username</th>
                 <th>Name</th>
                 <th>Role</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-                <?php if (count($teams) > 0) { ?>
-                    <?php foreach ($teams as $team): ?>
+                <?php 
+                if (count($akuns) > 0) { ?>
+                    <?php 
+                    $no =1;
+                    foreach ($akuns as $akun): ?>
                         <tr>
-                            <td><?= Html::encode("{$team['name']}") ?></td>
-                            <td><?= Html::encode("{$team->league['name']}") ?></td>
-                            <td><?= Html::encode("{$team['country']}") ?></td>
+                            <td><?= $no ?></td>
+                            <td><?= Html::encode("{$akun['username']}") ?></td>
+                            <td><?= Html::encode("{$akun['name']}") ?></td>
+                            <td><?= Html::encode("{$akun['role']}") ?></td>
                             <td style="width:15%;text-align:center;">
-                                <a class="btn btn-success btn-sm" href="<?php echo Url::to(['hello-crud/detail', 'id'=>$team['id']]); ?>"><i class="glyphicon glyphicon-eye-open"></i></a> 
+                                <a href="<?php echo Url::to(['akun/delete', 'id'=>$akun['username']]); ?>"><i class="glyphicon glyphicon-trash"></i></a>
+                                <a href="<?php echo Url::to(['akun/detail', 'id'=>$akun['username']]); ?>"><i class="glyphicon glyphicon-eye-open"></i></a>
+                                <a href="<?php echo Url::to(['akun/edit', 'id'=>$akun['username']]); ?>"><i class="glyphicon glyphicon-pencil"></i></a> 
                             </td>
                           </tr>
-                    <?php endforeach; ?>
-                <?php } else { ?>
+                    <?php 
+                    $no++;
+                endforeach; ?>
+                <?php 
+                } else { ?>
                 <tr>
                     <td style="text-align:center;font-size:15px;padding:25px;" colspan="5">No data found...</td>
                 </tr>
